@@ -134,14 +134,12 @@ void test(string test_case) {
 }
 
 int main(int argc, char** argv) {
-    int total_tests = 449, total_trains = 1346;
-    int i_test = 0, i_train = 0;
+    int total_tests = 449, total_trains = 1346, i_test = 0, i_train = 0;
     auto model = init_model_data(10, 64);
-    
     for(int epoch = 0; epoch < 100; epoch++) {
         cout << "epoch = " << epoch << " \tacc = " << accuracy(model, 400) / 4 << "%\n";
-        for(int i = 0; i < 100; i++) {
-            i_test = (i_test + 7) % total_tests;
+        for(int i = 0; i < 1000; i++) {
+            i_test = (i_test + 7) % total_tests; // 1366 % 7 = 1 hence we loop thru all samples
             sample_data sample = load_sample("../dataset/train" + to_string(i_test) + ".json");
             model = train_one(model, sample);
         }
