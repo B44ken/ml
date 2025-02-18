@@ -12,8 +12,8 @@ def download_and_save_mnist():
     transform = transforms.Compose([transforms.ToTensor()])
 
     # Download MNIST data
-    train_dataset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-    test_dataset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+    train_dataset = torchvision.datasets.MNIST(root='/tmp/', train=True, download=True, transform=transform)
+    test_dataset = torchvision.datasets.MNIST(root='/tmp/', train=False, download=True, transform=transform)
 
     # Function to save data to JSON file
     def save_to_json(dataset, prefix, num_samples):
@@ -32,8 +32,6 @@ def download_and_save_mnist():
 
     # Save test data
     save_to_json(test_dataset, "test", 100)
-
-    print("MNIST data has been downloaded and saved to JSON files.")
 
 if __name__ == "__main__":
     download_and_save_mnist()

@@ -126,10 +126,10 @@ int main(int argc, char** argv) {
     int total_tests = 100, total_trains = 600, i_test = 0, i_train = 0;
     vector<sample_data> train_samples, test_samples;
 
-    for(int i = 0; i < total_trains; i++)
-        train_samples.push_back(load_sample("dataset/28x28/train" + to_string(i) + ".json"));
-    for (int i = 0; i < total_tests; i++)
-        test_samples.push_back(load_sample("dataset/28x28/test" + to_string(i) + ".json"));
+    for(int i = 1; i <= total_trains; i++)
+        train_samples.push_back(load_sample("dataset/train" + to_string(i) + ".json"));
+    for (int i = 1; i <= total_tests; i++)
+        test_samples.push_back(load_sample("dataset/test" + to_string(i) + ".json"));
 
     auto model = init_model_data(10, 28*28);
     for(int epoch = 0; epoch <= 100; epoch++) {
