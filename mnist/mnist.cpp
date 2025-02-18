@@ -73,7 +73,7 @@ vector<float> softmax(vector<float> a) {
     auto softed = vector<float>(a.size(), 0);
     for(int i = 0; i < a.size(); i++)
         softed[i] = exp(a[i]) / denom;
-    
+
     return softed;
 }
 
@@ -84,14 +84,12 @@ vector<float> infer(model_data model, sample_data sample) {
 float dlt(int a, int b) { return (a == b) ? 1 : 0; }
 
 model_data gradients(model_data model, sample_data sample, vector<float> pred) {
-    model_data grad;
-    grad.inter.resize(model.inter.size(), 0.f);
-    grad.coef.resize(model.coef.size(), vector<float>(model.coef[0].size(), 0.f));
+    auto grad = init_model_data(model.coef.size(), model.coef[0].size());
 
     for(int i = 0; i < model.coef.size(); i++) {
-        float dL_dpi = pred[i] - dlt(i, sample.y);
-        vector<float> dL_dAi = scale(dL_dpi, sample.X);
-        float dL_dbi = dL_dpi;
+        auto dL_dpi = pred[i] - dlt(i, sample.y);
+        auto dL_dAi = scale(dL_dpi, sample.X);
+        auto dL_dbi = dL_dpi;
 
         grad.coef[i] = dL_dAi;
         grad.inter[i] += dL_dbi;
@@ -117,31 +115,29 @@ model_data train_one(model_data model, sample_data sample) {
     return update;
 }
 
-int accuracy(model_data model, int n) {
-    float good = 0;
-    for(int i = 0; i < n; i++) {
-        sample_data sample = load_sample("../dataset/test" + to_string(i) + ".json");
-        if(argmax(infer(model, sample)) == sample.y)
-            good++;
-    }
+int accuracy(model_data model, vector<sample_data> tests) {
+    int good = 0;
+    for(int i = 0; i < tests.size(); i++)
+        good += (argmax(infer(model, tests[i])) == tests[i].y);
     return good;
 }
 
-void test(string test_case) {
-    auto model = load_model("../sk-logistic.json");
-    auto sample = load_sample("../dataset/" + test_case + ".json");
-    std::cout << argmax(infer(model, sample)) << ", should be " << sample.y << "\n";
-}
-
 int main(int argc, char** argv) {
-    int total_tests = 449, total_trains = 1346, i_test = 0, i_train = 0;
-    auto model = init_model_data(10, 64);
-    for(int epoch = 0; epoch < 100; epoch++) {
-        cout << "epoch = " << epoch << " \tacc = " << accuracy(model, 400) / 4 << "%\n";
-        for(int i = 0; i < 1000; i++) {
-            i_test = (i_test + 7) % total_tests; // 1366 % 7 = 1 hence we loop thru all samples
-            sample_data sample = load_sample("../dataset/train" + to_string(i_test) + ".json");
-            model = train_one(model, sample);
+    int total_tests = 100, total_trains = 600, i_test = 0, i_train = 0;
+    vector<sample_data> train_samples, test_samples;
+
+    for(int i = 0; i < total_trains; i++)
+        train_samples.push_back(load_sample("dataset/28x28/train" + to_string(i) + ".json"));
+    for (int i = 0; i < total_tests; i++)
+        test_samples.push_back(load_sample("dataset/28x28/test" + to_string(i) + ".json"));
+
+    auto model = init_model_data(10, 28*28);
+    for(int epoch = 0; epoch <= 100; epoch++) {
+        if(epoch % 10 == 0)
+            cout << "epoch = " << epoch << " \tacc = " << accuracy(model, test_samples) << "%\n";
+        for(int i = 0; i < total_trains; i++) {
+            i_test = (i_test + 1) % total_trains;
+            model = train_one(model, train_samples[i]);
         }
     }
 }
