@@ -1,0 +1,5 @@
+dataset/
+.vscode/
+__pycache__/
+json.h
+XOR
