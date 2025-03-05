@@ -58,4 +58,17 @@ namespace shittyml {
     public:
         vec forward(vec input);
     };
+
+    class Trainer {
+    public:
+        shittyml::vec2d X;
+        shittyml::vec y_true;
+
+        Trainer(shittyml::vec2d X, shittyml::vec y_true);
+
+        float mean_sq_error(shittyml::Model m);
+        shittyml::vec grad(shittyml::Linear l);
+        void apply_grad(shittyml::Linear* l, shittyml::vec grad);
+        void train_epochs(shittyml::Model* m, int epochs);
+    };
 }
