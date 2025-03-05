@@ -12,8 +12,6 @@ namespace shittyml {
         return input;
     }
 
-    int test = 7;
-
     Model::Model(initializer_list<Layer*> layers) : pipeline(layers) {};
 
     vec Model::forward(vec input) {
