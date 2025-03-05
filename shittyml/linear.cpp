@@ -12,22 +12,29 @@ Linear::Linear(int in, int out) {
     b = vec(out);
 }
 
+// w.X + b
 float dot(vec X, vec w, float b) {
     return vec(X).map([w, b](float x, int i) { return x * w[i]; }).sum() + b;
 }
 
+// do w.Xi + bi for all i
 vec Linear::forward(vec x) {
     return vec(x).map([this, &x](float _, int i) { return dot(x, W[i], b[i]); });
 }
 
-// L = (f(x) - F(x))^2
-// dL/dx = 2(f(x) - F(x)) * df/dx
 Linear Linear::grad(vec x, float y) {
-    if(W.size() != 1 || b.size() != 1)
-        throw "y = mx+b only";
+    vec2d dWdx(W.size(), vec(W[0].size()));
+    vec dbdx(b.size());
 
-    float diff = 2 * (forward(x)[0] - y);
-    auto grads = Linear({{ diff * x[0] }}, { diff });
+    for(size_t i = 0; i < W.size(); i++) {
+        // chain rule: dL/dx = dL/dF * dF/dx
+        // dL/dF = 2(f(x) - F(x))
+        float diff = 2 * (forward(x)[i] - y);
+        // dF/dx = x for now (should pass chain rule through the model)
+        dWdx[i] = vec(x).map([this, &x, diff, i](float _, int j) { return diff * x[j]; });
+        // dF/db = 1
+        dbdx[i] = diff; 
+    }
 
-    return grads;
+    return Linear(dWdx, dbdx);
 }

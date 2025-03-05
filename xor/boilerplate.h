@@ -26,7 +26,7 @@ class linear {
     vec forward(vec x) {
         return logit(vec(W.size(), 0), W, b);
     }
-}
+};
 
 layer_data do_relu = {{}, {}, "do_relu"};
 

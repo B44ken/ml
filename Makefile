@@ -1,10 +1,20 @@
-INCL = -I./shittyml
+flag = -O3 -Ishittyml -Wall
 
 build:
-	mkdir -p build
+	mkdir -p build/test
+	mkdir -p build/shittyml
 
-test_xor: build
-	g++ -O3 -Wall $(INCL) test/xor.cpp shittyml/*.cpp -o build/test
+clean: build
+	rm -r build
 
-test_xor_run: test_xor
-	./build/test
+build/shittyml/%.o: shittyml/%.cpp | build
+	g++ $(flag) -c $< -o $@
+
+build/test/%.o: test/%.cpp | build
+	g++ $(flag) -c $< -o $@
+
+objs := $(patsubst shittyml/%.cpp,build/shittyml/%.o,$(wildcard shittyml/*.cpp))
+
+build/test/%: $(objs) build/test/%.o
+	g++ $(flag) $(objs) $@.o -o build/test/$*
+	./build/test/$*

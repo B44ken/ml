@@ -51,7 +51,7 @@ int main() {
     );
 
     cout << "loss before\t" << mult_two.mean_sq_error(model) << endl;
-    mult_two.train_epochs(&model, 1000000);
+    mult_two.train_epochs(&model, 10000);
     cout << "loss after\t" << mult_two.mean_sq_error(model) << endl;
     float b = model.forward({0})[0];
     float m = model.forward({1})[0] - b;
