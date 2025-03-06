@@ -1,4 +1,4 @@
-flag = -O3 -Ishittyml -Wall
+flag = -g -O0 -Ishittyml -Wall
 
 build:
 	mkdir -p build/test
@@ -17,4 +17,3 @@ objs := $(patsubst shittyml/%.cpp,build/shittyml/%.o,$(wildcard shittyml/*.cpp))
 
 build/test/%: $(objs) build/test/%.o
 	g++ $(flag) $(objs) $@.o -o build/test/$*
-	./build/test/$*

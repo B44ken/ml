@@ -1,10 +1,9 @@
 #include "shittyml.h"
-#include <vector>
 
 namespace shittyml {
     using namespace std;
 
-    Layer::Layer() = default;
+    // Layer::Layer() = default;
 
     NoOpLayer::NoOpLayer() = default;
 
@@ -16,8 +15,8 @@ namespace shittyml {
 
     vec Model::forward(vec input) {
         vec out = input;
-        for (auto layer : pipeline)
-            out = layer->forward(out);
+        for(size_t i = 0; i < pipeline.size(); i++)
+            out = pipeline[i]->forward(out);
         return out;
     }
 };

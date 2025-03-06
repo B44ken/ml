@@ -8,33 +8,55 @@ Linear::Linear(vec2d weights, vec bias) : W(weights), b(bias) {}
 
 // a Linear unity of `out` vectors that each take `in` inputs
 Linear::Linear(int in, int out) {
-    W = vec2d(out, vec(in));
+    W = vec2d(out, in);
     b = vec(out);
 }
 
 // w.X + b
 float dot(vec X, vec w, float b) {
-    return vec(X).map([w, b](float x, int i) { return x * w[i]; }).sum() + b;
+    return vec(X).map([X, w, b](float _, int i) { return X[i] * w[i]; }).sum() + b;
 }
 
 // do w.Xi + bi for all i
 vec Linear::forward(vec x) {
-    return vec(x).map([this, &x](float _, int i) { return dot(x, W[i], b[i]); });
+    return vec(W.size()).map([this, &x](float _, int i) { return dot(x, W[i], b[i]); });
 }
 
-Linear Linear::grad(vec x, float y) {
-    vec2d dWdx(W.size(), vec(W[0].size()));
-    vec dbdx(b.size());
-
-    for(size_t i = 0; i < W.size(); i++) {
-        // chain rule: dL/dx = dL/dF * dF/dx
-        // dL/dF = 2(f(x) - F(x))
-        float diff = 2 * (forward(x)[i] - y);
-        // dF/dx = x for now (should pass chain rule through the model)
-        dWdx[i] = vec(x).map([this, &x, diff, i](float _, int j) { return diff * x[j]; });
-        // dF/db = 1
-        dbdx[i] = diff; 
+vec Linear::backward_grad(vec error) {
+    auto result = vec(W[0].size());
+    for (size_t i = 0; i < W.size(); i++) {
+        for (size_t j = 0; j < W[0].size(); j++) {
+            result[j] += W[i][j] * error[i];
+        }
     }
+    return result;
+}
 
-    return Linear(dWdx, dbdx);
+LinearGrad Linear::grad(vec input, vec error) {
+    // dL/dW = error * fwd_input
+    // dL/db = error
+    auto g = LinearGrad(this);
+    for (size_t i = 0; i < W.size(); i++) {
+        for (size_t j = 0; j < W[i].size(); j++) {
+            g.W[i][j] = error[i] * input[j];
+        }
+        g.b[i] = error[i];
+    }
+    return g;
+}
+
+float lr = 0.01;
+// subtract lr*grad from each element of W and b
+void Linear::apply_grad(LinearGrad grad) {
+    for (size_t i = 0; i < W.size(); i++) {
+        for (size_t j = 0; j < W[i].size(); j++) {
+            W[i][j] -= lr * grad.W[i][j];
+        }
+        b[i] -= lr * grad.b[i];
+    }
+}
+
+LinearGrad::LinearGrad(Linear* shape) {
+    W = vec2d(shape->W.size(), shape->W[0].size());
+    b = vec(shape->b.size());
 }
