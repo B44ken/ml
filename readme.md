@@ -5,6 +5,7 @@ im calling it `1f4a9`, or `onef` for short.
 
 if you want to use it you can go to shittyml (b44ken/ml). you can use it like
 
+```c++
 #include "onef.h"
 
 auto model = shittyml::Model({
@@ -19,6 +20,7 @@ auto set = shittyml::Trainer(
 std::cout << "loss =\t" << set.mse(model) << "\n";
 set.train_epochs(&model, 10000);
 std::cout << "loss =\t" << set.mse(model) << "\n";
+```
 
 to do list
 
