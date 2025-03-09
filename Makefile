@@ -1,4 +1,4 @@
-flag = -g -O0 -Ishittyml -Wall
+flag = -g -O3 -Ishittyml -Wall
 
 build:
 	mkdir -p build/test

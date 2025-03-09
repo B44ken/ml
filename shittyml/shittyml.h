@@ -38,6 +38,7 @@ namespace shittyml {
     class Layer {
     public:
         vec shape;
+        vec last_input;
         Layer() = default;
         ~Layer() = default;
         virtual vec forward(vec input) = 0;
@@ -99,15 +100,15 @@ namespace shittyml {
     class Trainer {
     public:
         vec2d X;
-        vec y_true;
+        vec2d y_true;
 
-        Trainer(vec2d X, vec y_true);
+        Trainer(vec2d X, vec2d y_true);
 
         float mse(Model m);
         vec grad(Linear l);
         void train_epochs(Model* m, int epochs);
         int train_until_convergence(Model* m);
-        void backprop_one(Model* model, vec Xi, float y_truei);
+        void backprop_one(Model* model, vec Xi, vec y_true);
         void backprop(Model* model);
     };
 }

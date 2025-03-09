@@ -9,10 +9,14 @@ namespace shittyml {
     vec::vec(int size) : vector<float>(size, 0.f) {}
 
     string vec::stringify() const {
-        string out = "vec(" + to_string(this->size()) + "): ";
-        for (auto& val : *this)
-            out += to_string(val) + ", ";
-        return out.substr(0, out.size() - 2);
+        string out = "[";
+        for(auto& val : *this)
+            out += to_string(val).substr(0, 5) + " ";
+        return out.substr(0, out.size() - 1) + "]";
+        // string out = "vec(" + to_string(this->size()) + "): ";
+        // for (auto& val : *this)
+        //     out += to_string(val) + ", ";
+        // return out.substr(0, out.size() - 2);
     }
 
     // map V[i] = f(V[i], i) over i in V
@@ -83,9 +87,9 @@ namespace shittyml {
     }
 
     ostream& operator<<(ostream& os, vec2d m) {
-        os << "vec2d(" << m.size() << ")\n";
+        os << "vec2d\n";
         for (auto row : m)
-            os << "  " << row << "\n";
+            os << row << "\n";
         return os;
     }
 }

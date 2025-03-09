@@ -5,6 +5,11 @@ namespace shittyml {
 
     // Layer::Layer() = default;
 
+    vec Layer::backward_grad(vec error) {
+
+        return error;
+    }
+
     NoOpLayer::NoOpLayer() = default;
 
     vec NoOpLayer::forward(vec input) {
