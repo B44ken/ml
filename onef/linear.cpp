@@ -1,6 +1,6 @@
-#include "shittyml.h"
+#include "onef.h"
 
-using namespace shittyml;
+using namespace onef;
 
 // a Linear unit exists to forward pass y_i = aX_i + b_i for all i
 // that is, we apply |i| dot products to the same input vector, plus a bias

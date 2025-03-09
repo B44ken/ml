@@ -1,6 +1,6 @@
-#include "shittyml.h"
+#include "onef.h"
 
-namespace shittyml {
+namespace onef {
     using namespace std;
 
     // Layer::Layer() = default;

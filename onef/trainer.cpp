@@ -1,5 +1,5 @@
-#include "shittyml.h"
-using namespace shittyml;
+#include "onef.h"
+using namespace onef;
 
 Trainer::Trainer(vec2d X, vec2d y_true) : X(X), y_true(y_true) {};
 

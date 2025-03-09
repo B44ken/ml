@@ -1,19 +1,19 @@
-flag = -g -O3 -Ishittyml -Wall
+flag = -g -O3 -Ionef -Wall
 
 build:
 	mkdir -p build/test
-	mkdir -p build/shittyml
+	mkdir -p build/onef
 
 clean: build
 	rm -r build
 
-build/shittyml/%.o: shittyml/%.cpp | build
+build/onef/%.o: onef/%.cpp | build
 	g++ $(flag) -c $< -o $@
 
 build/test/%.o: test/%.cpp | build
 	g++ $(flag) -c $< -o $@
 
-objs := $(patsubst shittyml/%.cpp,build/shittyml/%.o,$(wildcard shittyml/*.cpp))
+objs := $(patsubst onef/%.cpp,build/onef/%.o,$(wildcard onef/*.cpp))
 
 build/test/%: $(objs) build/test/%.o
 	g++ $(flag) $(objs) $@.o -o build/test/$*

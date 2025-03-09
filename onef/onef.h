@@ -5,7 +5,7 @@
 #include <functional>
 #include <cmath>
 
-namespace shittyml {
+namespace onef {
     using namespace std;
 
     class Linear;
