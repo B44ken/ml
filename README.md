@@ -9,7 +9,7 @@ if you want to use it you can go to [onef (b44ken/ml)](https://github.com/B44ken
 #include "onef.h"
 
 auto model = onef::Model({
-    new shittyml::Linear(1, 1)
+    new onef::Linear(1, 1)
 });
 
 auto set = onef::Trainer(
