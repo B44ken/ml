@@ -1,5 +1,3 @@
-#pragma once
-
 #include <vector>
 #include <iostream>
 #include <functional>
@@ -7,6 +5,7 @@
 
 namespace onef {
     using namespace std;
+    extern float lr;
 
     class Linear;
     class LinearGrad;
@@ -21,8 +20,8 @@ namespace onef {
         float sum();
         string stringify() const;
         friend ostream& operator<<(ostream& os, vec v);
-        vec operator*(float c);
-        vec operator+(float b);
+        vec operator*(float c) const;
+        vec operator+(float b) const;
     };
 
     class vec2d : public vector<vec> {
@@ -32,7 +31,7 @@ namespace onef {
         vec2d(initializer_list<initializer_list<float>> rows);
         vec2d transpose();
         friend ostream& operator<<(ostream& os, vec2d v);
-        vec operator*(vec a);
+        vec operator*(vec a) const;
     };
 
     class Layer {
@@ -57,6 +56,9 @@ namespace onef {
     public:
         NoOpLayer();
         vec forward(vec input);
+        vec backward_grad(vec error);
+        LinearGrad grad(vec _1, vec _2);
+        void apply_grad(LinearGrad grad);
     };
 
     class Model {
@@ -105,7 +107,7 @@ namespace onef {
         Trainer(vec2d X, vec2d y_true);
 
         float mse(Model m);
-        vec grad(Linear l);
+        vec grad(const Linear& l);
         void train_epochs(Model* m, int epochs);
         int train_until_convergence(Model* m);
         void backprop_one(Model* model, vec Xi, vec y_true);

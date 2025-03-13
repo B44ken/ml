@@ -63,7 +63,7 @@ LinearGrad Linear::grad(vec input, vec error) {
     return g;
 }
 
-float lr = 0.00001;
+// float lr = 0.00001;
 // subtract lr*grad from each element of W and b
 void Linear::apply_grad(LinearGrad grad) {
     for (size_t i = 0; i < W.size(); i++) {

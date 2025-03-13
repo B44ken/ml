@@ -74,20 +74,17 @@ void Trainer::backprop_one(Model* model, vec Xi, vec yi) {
     // backward pass
     auto grad_back = grad_square_errors(yi, forward.back());
 
-
     for(int i = pl->size() - 1; i >= 0; i--) {
-
+        // if linear, we need to update gradients
         auto linear = dynamic_cast<Linear*>(pl->at(i));
         if(linear) {
             auto inp = (i == 0) ? Xi : forward[i - 1];
             auto g = linear->grad(inp, grad_back);
             linear->apply_grad(g);
         }
+        // if not just carry the error backwards
         grad_back = (*pl)[i]->backward_grad(grad_back);
-
     }
-
-    auto pl0 = (Linear*)pl->at(0);
 }
 
 

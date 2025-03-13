@@ -12,8 +12,13 @@ namespace onef {
 
     NoOpLayer::NoOpLayer() = default;
 
-    vec NoOpLayer::forward(vec input) {
-        return input;
+    vec NoOpLayer::forward(vec input) { return input; }
+    LinearGrad NoOpLayer::grad(vec input, vec backflow) {
+        return LinearGrad(new Linear(0, 0));
+    }
+    void NoOpLayer::apply_grad(LinearGrad grad) {}
+    vec NoOpLayer::backward_grad(vec error) {
+        return error;
     }
 
     Model::Model(initializer_list<Layer*> layers) : pipeline(layers) {};
